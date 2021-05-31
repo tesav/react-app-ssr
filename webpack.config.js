@@ -37,6 +37,7 @@ const clientConfig = {
     ],
   },
   output: {
+    publicPath: '/',
     path: path.resolve(__dirname, 'build'),
     //filename: '[name].js',
 
