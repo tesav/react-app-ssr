@@ -5,6 +5,6 @@ module.exports = {
         //'@babel/plugin-transform-async-to-generator',
         //'@babel/transform-arrow-functions',
         //'@babel/proposal-object-rest-spread',
-        '@babel/proposal-class-properties'
+        '@babel/proposal-class-properties',
     ]
 };

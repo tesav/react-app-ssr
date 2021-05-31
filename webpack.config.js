@@ -17,6 +17,9 @@ const common = {
       },
     ],
   },
+  experiments: {
+    topLevelAwait: true
+  }
 };
 
 const clientConfig = {
