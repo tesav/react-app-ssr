@@ -7,8 +7,8 @@ import { createStore } from 'redux'
 import reducers from './reducers'
 import { StaticRouter, matchPath } from 'react-router-dom'
 
+import { getServerRoutes } from './app'
 import App from './components/App'
-import routes from './routes'
 
 const app = express()
 
@@ -19,9 +19,12 @@ app.use(express.static(path.resolve(__dirname), { index: '_' }))
 app.get('*', async (req, res) => {
 
   const parsedUrl = req._parsedOriginalUrl
+  const location = req.url
+
+  const serverRoutes = await getServerRoutes()
 
   // get matched route
-  const matchRoute = routes.find(route => matchPath(parsedUrl.pathname, route))
+  const matchRoute = serverRoutes.find(route => matchPath(parsedUrl.pathname, route))
 
   if (!matchRoute) {
     return res.status(404).send("Not found.")
@@ -41,8 +44,8 @@ app.get('*', async (req, res) => {
   const store = createStore(reducers, initialState)
 
   const appHTML = renderToString(
-    <StaticRouter location={req.url} context={context}>
-      <App store={store} />
+    <StaticRouter location={location} context={context}>
+      <App store={store} routes={serverRoutes} />
     </StaticRouter>
   )
 

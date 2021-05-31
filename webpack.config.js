@@ -1,3 +1,4 @@
+const webpack = require('webpack')
 const path = require('path');
 const nodeExternals = require('webpack-node-externals');
 const CopyWebpackPlugin = require('copy-webpack-plugin')
@@ -115,6 +116,18 @@ const serverConfig = {
     path: path.resolve(__dirname, 'build'),
     filename: 'server.js',
   },
+
+  plugins: [
+    //new ProgressBarPlugin(),
+    // new webpack.ProvidePlugin({
+    //   w: path.resolve('src/window.mock'),
+    //   // window: path.resolve('src/window.mock'),
+    //   document: path.resolve('node_modules/global/document'),
+    // }),
+    new webpack.optimize.LimitChunkCountPlugin({
+      maxChunks: 1,
+    }),
+  ],
 
   devtool: 'cheap-module-source-map',
 

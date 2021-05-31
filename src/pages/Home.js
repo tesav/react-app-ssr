@@ -2,9 +2,10 @@ import React from 'react'
 import { connect } from 'react-redux'
 import Nav from '../components/Nav'
 
-const Home = ({ initialText, changeText, staticContext }) => (
+const Home = ({ initialText, changeText, staticContext, ...rest }) => (
   <div>
     <Nav />
+    <p>{JSON.stringify(rest)}</p>
     {/* <p>data: {staticContext && staticContext.data}</p> */}
     <p>{initialText}</p>
     <button onClick={changeText}>change text!</button>
