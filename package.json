@@ -1,0 +1,40 @@
+{
+  "name": "react-server-side-rendering-example",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "https://github.com/burczu/react-server-side-rendering-example.git",
+  "author": "b.dybowski@gmail.com",
+  "license": "MIT",
+  "scripts": {
+    "clear": "rimraf ./build",
+    "build:prod": "npm run clear && webpack --mode production",
+    "build:dev": "npm run clear && webpack -w --mode development --profile",
+    "server:start": "nodemon ./build/server.js",
+    "start": "npm run build:prod && npm run server:start"
+  },
+  "dependencies": {
+    "express": "^4.17.1",
+    "nodemon": "^2.0.7",
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2",
+    "react-redux": "^7.2.4",
+    "react-router-dom": "^5.2.0",
+    "redux": "^4.1.0"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.14.3",
+    "@babel/plugin-proposal-class-properties": "^7.13.0",
+    "@babel/plugin-transform-runtime": "^7.14.3",
+    "@babel/preset-env": "^7.14.4",
+    "@babel/preset-react": "^7.13.13",
+    "babel-loader": "^8.2.2",
+    "copy-webpack-plugin": "^9.0.0",
+    "html-webpack-plugin": "^5.3.1",
+    "mini-css-extract-plugin": "^1.6.0",
+    "progress-bar-webpack-plugin": "^2.1.0",
+    "rimraf": "^3.0.2",
+    "webpack": "^5.38.1",
+    "webpack-cli": "^4.7.0",
+    "webpack-node-externals": "^3.0.0"
+  }
+}
