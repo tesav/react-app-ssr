@@ -1,4 +1,6 @@
 import React from 'react'
+import { pathToRegexp, match, parse, compile } from 'path-to-regexp'
+
 import routes from './routes'
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj } }
@@ -12,55 +14,66 @@ export async function getServerRoutes() {
   }))
 }
 
-export function routeName(name, data = {}, full = false) {
+/**
+ * Returns a route by route name
+ * 
+ * @param {string} name
+ * 
+ * @param {Object} [data]
+ * @param {Object} [data.params]
+ * @param {Object|string} [data.query]
+ * @param {string} [data.hash]
+ * @param {Object} [data.state]
+ * 
+ * @param {Object} [options]
+ * @param {boolean} [options.full=false] - If need full URL
+ * @param {boolean} [options.encode=true] - Encode data.params
+ * 
+ * @returns {string}
+ */
+export function routeName(name, data = {}, options = {}) {
 
   const route = routes.find(route => route.name === name)
-
+  const obj = data || {}
+  const opt = Object.assign({ encode: true }, options)
   let path = '#'
 
   if (!route) {
     console.error(`ROUTER ERROR: Route name: "${name}" not found!`)
   } else {
-    path = route.path
+    path = compile(route.path, !opt.encode ? {} : { encode: encodeURIComponent })(obj.params)
 
-    if (data) {
-
-      if (data.params && Object.keys(data.params).length) {
-        try {
-          path = compile(path, { encode: encodeURIComponent })(data.params)
-        } catch (e) {
-          console.error(`ROUTER ERROR: Route name "${name}" error: ${e}!`)
+    if (obj.query) {
+      if (typeof obj.query === 'string') {
+        path += `?${obj.query.replace(/^\?/, '')}`
+      } else if (typeof obj.query === 'object') {
+        const temp = []
+        for (let [key, value] of Object.entries(obj.query)) {
+          temp.push(`${key}=${value}`)
         }
+        path += `?${temp.join('&')}`
       }
+    }
 
-      if (data.query) {
-        if (typeof data.query === 'string') {
-          path += `?${data.query.replace(/^\?/, '')}`
-        } else if (typeof data.query === 'object') {
-          const temp = []
-          for (let [key, value] of Object.entries(data.query)) {
-            temp.push(`${key}=${value}`)
-          }
-          path += `?${temp.join('&')}`
-        }
-      }
+    if (obj.hash) {
+      path += `#${obj.hash.replace('#', '')}`
+    }
 
-      if (data.hash) {
-        path += `#${data.hash.replace('#', '')}`
-      }
-
-      if (data.state && Object.keys(data.state).length) {
-        if (full) {
-          console.warn(`ROUTER WARNING: Route name "${name}" "state" no effect!`)
-        } else {
-          return { pathname: path, state: data.state }
-        }
+    if (obj.state && Object.keys(obj.state).length) {
+      if (opt.full) {
+        console.warn(`ROUTER WARNING: Route name "${name}" "state" no effect!`)
+      } else {
+        return { pathname: path, state: obj.state }
       }
     }
   }
 
-  return path
-  //return full ? `${w.location.origin}${path}` : path
+  return opt.full ? `${getHost()}${path}` : path
+}
+
+export function getHost() {
+  console.warn(`Not Implemented!`)
+  return ''
 }
 
 export function isSSR() {

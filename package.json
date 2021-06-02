@@ -1,9 +1,9 @@
 {
-  "name": "react-server-side-rendering-example",
+  "name": "react-app-ssr",
   "version": "1.0.0",
   "main": "index.js",
-  "repository": "https://github.com/burczu/react-server-side-rendering-example.git",
-  "author": "b.dybowski@gmail.com",
+  "repository": "https://github.com/tesav/react-app-ssr.git",
+  "author": "tesav@yandex.ru",
   "license": "MIT",
   "scripts": {
     "clear": "rimraf ./build",
@@ -15,6 +15,7 @@
   "dependencies": {
     "express": "^4.17.1",
     "nodemon": "^2.0.7",
+    "path-to-regexp": "^6.2.0",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "react-redux": "^7.2.4",
