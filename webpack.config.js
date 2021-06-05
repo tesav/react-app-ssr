@@ -110,12 +110,12 @@ const serverConfig = {
 
   entry: {
     server: [
-      path.resolve(__dirname, 'src', 'server.js')
+      path.resolve(__dirname, 'src', 'server', 'index.js')
     ],
   },
   output: {
-    path: path.resolve(__dirname, 'build'),
-    filename: 'server.js',
+    path: path.resolve(__dirname, 'build-server'),
+    filename: 'index.js',
   },
 
   plugins: [
@@ -125,9 +125,9 @@ const serverConfig = {
     //   // window: path.resolve('src/window.mock'),
     //   document: path.resolve('node_modules/global/document'),
     // }),
-    new webpack.optimize.LimitChunkCountPlugin({
-      maxChunks: 1,
-    }),
+    // new webpack.optimize.LimitChunkCountPlugin({
+    //   maxChunks: 1,
+    // }),
   ],
 
   devtool: 'cheap-module-source-map',

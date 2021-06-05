@@ -9,7 +9,7 @@
     "clear": "rimraf ./build",
     "build:prod": "npm run clear && webpack --mode production",
     "build:dev": "npm run clear && webpack -w --mode development --profile",
-    "server:start": "nodemon ./build/server.js",
+    "server:start": "nodemon ./build-server/index.js",
     "start": "npm run build:prod && npm run server:start"
   },
   "dependencies": {

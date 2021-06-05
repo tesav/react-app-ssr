@@ -4,11 +4,12 @@ import path from 'path'
 import React from 'react'
 import { renderToString } from 'react-dom/server'
 import { createStore } from 'redux'
-import reducers from './reducers'
+import reducers from '../reducers'
 import { StaticRouter, matchPath } from 'react-router-dom'
 
-import { getServerRoutes } from './app'
-import App from './components/App'
+import { getServerRoutes } from '../app'
+import App from '../components/App'
+import createServer from './createServer'
 
 const app = express()
 
@@ -32,9 +33,9 @@ app.get('*', async (req, res) => {
 
   // fetch data of the matched component
   let context = null
-  if (matchRoute.component && typeof matchRoute.component.serverLoad === 'function') {
+  if (matchRoute.component && typeof matchRoute.component.serverCallback === 'function') {
     try {
-      context = await matchRoute.component.serverLoad(parsedUrl, matchRoute)
+      context = await matchRoute.component.serverCallback(parsedUrl, matchRoute)
     } catch (error) {
       context = { error }
     }
@@ -66,4 +67,4 @@ app.get('*', async (req, res) => {
   res.send(indexHTML)
 })
 
-app.listen(3000, () => console.log('Listening on http://localhost:3000'))
+createServer(app)
