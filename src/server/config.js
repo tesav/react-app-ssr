@@ -8,10 +8,10 @@ export default {
     secure: false,
 }
 
-export const secureOptions = {
-    key: fs.readFileSync(path.resolve(__dirname, '../src/server/cert_files/server.key')),
-    cert: fs.readFileSync(path.resolve(__dirname, '../src/server/cert_files/server.crt')),
+export const getSecureOptions = () => ({
+    key: fs.readFileSync(path.resolve(__dirname, '../../src/server/cert_files/server.key')),
+    cert: fs.readFileSync(path.resolve(__dirname, '../../src/server/cert_files/server.crt')),
     //
-    //  pfx: fs.readFileSync(path.resolve(__dirname, '../src/server/cert_files/x.pfx')),
+    //  pfx: fs.readFileSync(path.resolve(__dirname, '../../src/server/cert_files/x.pfx')),
     //  passphrase: 'sample'
-}
+})

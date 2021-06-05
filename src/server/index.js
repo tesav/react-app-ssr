@@ -11,11 +11,12 @@ import { getServerRoutes } from '../app'
 import App from '../components/App'
 import createServer from './createServer'
 
+const clientDir = path.resolve(__dirname, '../client')
 const app = express()
 
 // serve static assets
-app.use(express.static(path.resolve(__dirname), { index: '_' }))
-//app.get(/\.(js|css|map|ico)$/, express.static(__dirname))
+app.use(express.static(clientDir, { index: '_' }))
+//app.get(/\.(js|css|map|ico)$/, express.static(__dirname, '../client'))
 
 app.get('*', async (req, res) => {
 
@@ -50,7 +51,7 @@ app.get('*', async (req, res) => {
     </StaticRouter>
   )
 
-  const indexHTML = fs.readFileSync(path.resolve(__dirname, '..', 'build', 'index.html'), {
+  const indexHTML = fs.readFileSync(path.resolve(clientDir, 'index.html'), {
     encoding: 'utf8',
   })
     .replace(

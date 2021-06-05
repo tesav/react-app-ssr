@@ -1,12 +1,12 @@
 import https from 'https'
 import http from 'http'
-import config, { secureOptions } from './config'
+import config, { getSecureOptions } from './config'
 
 export default app => {
     let server = null
 
     if (config.secure) {
-        server = https.createServer(secureOptions, app)
+        server = https.createServer(getSecureOptions(), app)
     } else {
         // V1
         //server = app

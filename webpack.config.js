@@ -33,12 +33,12 @@ const clientConfig = {
 
   entry: {
     client: [
-      path.resolve(__dirname, 'src', 'client.js')
+      path.resolve(__dirname, 'src/client.js')
     ],
   },
   output: {
     publicPath: '/',
-    path: path.resolve(__dirname, 'build'),
+    path: path.resolve(__dirname, 'build/client'),
     //filename: '[name].js',
 
     filename: "static/js/[name].[chunkhash].bundle.js",
@@ -110,11 +110,11 @@ const serverConfig = {
 
   entry: {
     server: [
-      path.resolve(__dirname, 'src', 'server', 'index.js')
+      path.resolve(__dirname, 'src/server/index.js')
     ],
   },
   output: {
-    path: path.resolve(__dirname, 'build-server'),
+    path: path.resolve(__dirname, 'build/server'),
     filename: 'index.js',
   },
 
