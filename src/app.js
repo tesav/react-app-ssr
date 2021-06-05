@@ -2,10 +2,12 @@ import React from 'react'
 import { pathToRegexp, match, parse, compile } from 'path-to-regexp'
 
 import routes from './routes'
+// import getStore from './store'
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj } }
 
 export { routes }
+// export { getStore }
 
 export async function getServerRoutes() {
   return /*await*/ Promise.all(routes.map(async ({ ...route }) => {
@@ -85,4 +87,9 @@ export function lazy(cb) {
     return cb()
   }
   return React.lazy(cb)
+}
+
+export const pageServerCallback = (cb, Page) => {
+  Page.serverCallback = cb
+  return Page
 }

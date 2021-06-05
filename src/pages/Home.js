@@ -1,38 +1,49 @@
 import React from 'react'
-import { connect } from 'react-redux'
+import { useSelector, useDispatch } from 'react-redux'
 import Nav from '../components/Nav'
-import { pageServerCallback } from '../utils/ssr'
+import { pageServerCallback } from '../app'
+import apiTest from '../api/test'
+import { pending, success, error } from '../store/slices/test'
 
-const Home = ({ initialText, changeText, staticContext, ...rest }) => (
-  <div>
-    <Nav />
-    <p>{JSON.stringify(rest, null, true)}</p>
-    {/* <p>data: {staticContext && staticContext.data}</p> */}
-    <p>{initialText}</p>
-    <button onClick={changeText}>change text!</button>
-  </div>
-)
+const Home = ({ initialText, staticContext, ...rest }) => {
 
-const mapStateToProps = ({ initialText }) => ({
-  initialText,
-})
+  const data = useSelector((state) => state.aaa.data)
+  const dispatch = useDispatch()
 
-const mapDispatchToProps = (dispatch) => ({
-  changeText: () => dispatch({ type: 'CHANGE_TEXT' }),
-})
-
-const serverAction = params => {
-  new Promise((resolve, reject) => {
-    setTimeout(() => {
-      //console.log(params)
-      resolve({ data: 'test!!!' })
-      //reject(777)
-    }, 300)
-  })
+  return (
+    <div>
+      <Nav />
+      <p>{JSON.stringify(rest, null, true)}</p>
+      <p>staticContext: {JSON.stringify(staticContext)}</p>
+      <p>{initialText}</p>
+      {/* <button onClick={changeText}>change text!</button> */}
+      <div>
+        <button
+          aria-label="Increment value"
+          onClick={() => dispatch(success(123))}
+        >
+          Increment
+        </button>
+        <span>{JSON.stringify(data, null, true)}</span>
+        <button
+          aria-label="Decrement value"
+          onClick={() => dispatch(success(321))}
+        >
+          Decrement
+        </button>
+      </div>
+    </div>
+  )
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(
-  pageServerCallback(serverAction,
-    Home
-  )
+const serverAction = ({ store }) => {
+  return apiTest('aaaa/bbbbb')
+    .then(data => {
+      store.dispatch(success(data))
+    })
+}
+
+export default pageServerCallback(serverAction,
+  Home
 )
+

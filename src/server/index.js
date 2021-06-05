@@ -3,11 +3,10 @@ import fs from 'fs'
 import path from 'path'
 import React from 'react'
 import { renderToString } from 'react-dom/server'
-import { createStore } from 'redux'
-import reducers from '../reducers'
 import { StaticRouter, matchPath } from 'react-router-dom'
 
 import { getServerRoutes } from '../app'
+import { initStore } from '../store'
 import App from '../components/App'
 import createServer from './createServer'
 
@@ -32,18 +31,17 @@ app.get('*', async (req, res) => {
     return res.status(404).send("Not found.")
   }
 
+  const store = initStore()
+
   // fetch data of the matched component
   let context = null
   if (matchRoute.component && typeof matchRoute.component.serverCallback === 'function') {
     try {
-      context = await matchRoute.component.serverCallback(parsedUrl, matchRoute)
+      context = await matchRoute.component.serverCallback({ store, parsedUrl, matchRoute })
     } catch (error) {
       context = { error }
     }
   }
-
-  const initialState = { initialText: 'rendered on the server' }
-  const store = createStore(reducers, initialState)
 
   const appHTML = renderToString(
     <StaticRouter location={location} context={context}>
@@ -60,7 +58,7 @@ app.get('*', async (req, res) => {
     )
     .replace(
       '<script>window.__STATE__</script>',
-      `<script>window.__STATE__=${JSON.stringify(initialState)}</script>`
+      `<script>window.__STATE__=${JSON.stringify(store.getState())}</script>`
     );
 
   res.contentType('text/html')

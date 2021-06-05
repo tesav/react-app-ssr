@@ -1,13 +1,13 @@
 import React, { Suspense } from 'react'
 import ReactDOM from 'react-dom'
-import { createStore } from 'redux'
-import reducers from './reducers'
 import { BrowserRouter } from 'react-router-dom'
 
+import { initStore } from './store'
 import { routes } from './app'
 import App from './components/App'
 
-const store = createStore(reducers, { ...window.__STATE__ })
+const store = initStore(window.__STATE__)
+delete window.__STATE__
 
 ReactDOM./*hydrate*/render(
   <BrowserRouter>
