@@ -1,43 +1,17 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import Nav from '../components/Nav'
+import { pageServerCallback } from '../utils/ssr'
 
 const Home = ({ initialText, changeText, staticContext, ...rest }) => (
   <div>
     <Nav />
-    <p>{JSON.stringify(rest)}</p>
+    <p>{JSON.stringify(rest, null, true)}</p>
     {/* <p>data: {staticContext && staticContext.data}</p> */}
     <p>{initialText}</p>
     <button onClick={changeText}>change text!</button>
   </div>
 )
-
-// class Home extends React.PureComponent {
-
-//   render() {
-
-//     const { initialText, changeText, staticContext } = this.props
-
-//     return (
-//       <div>
-//         <Nav />
-//         {/* {console.log(staticContext)} */}
-//         <p>{initialText}</p>
-//         <button onClick={changeText}>change text!</button>
-//       </div>
-//     )
-//   }
-// }
-
-Home._serverLoad = /*async*/ (parsedUrl, matchRoute) => {
-  // console.log(parsedUrl)
-  return new Promise((resolve, reject) => {
-    setTimeout(() => {
-      resolve({ data: 'test!!!' })
-      //reject(777)
-    }, 300)
-  })
-}
 
 const mapStateToProps = ({ initialText }) => ({
   initialText,
@@ -47,4 +21,18 @@ const mapDispatchToProps = (dispatch) => ({
   changeText: () => dispatch({ type: 'CHANGE_TEXT' }),
 })
 
-export default connect(mapStateToProps, mapDispatchToProps)(Home)
+const serverAction = params => {
+  new Promise((resolve, reject) => {
+    setTimeout(() => {
+      //console.log(params)
+      resolve({ data: 'test!!!' })
+      //reject(777)
+    }, 300)
+  })
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(
+  pageServerCallback(serverAction,
+    Home
+  )
+)
