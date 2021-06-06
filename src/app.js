@@ -96,3 +96,8 @@ export function pageServerCallback(cb, Page) {
   Page.serverCallback = cb
   return Page
 }
+
+export function pageServerCallbackUses(cb, Page) {
+  Page.serverCallbackUses = cb
+  return Page
+}

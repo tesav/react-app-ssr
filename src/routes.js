@@ -9,12 +9,16 @@ export default [
     {
         name: 'home',
         path: '/',
-        exact: true,
         component: Home,
     },
     {
         name: 'about',
         path: '/about/:filter?',
         component: About,
+    },
+    {
+        name: 'test',
+        path: '/:id?',
+        component: Home,
     },
 ]

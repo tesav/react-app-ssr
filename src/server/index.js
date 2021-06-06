@@ -8,6 +8,7 @@ import { StaticRouter, matchPath } from 'react-router-dom'
 import { getServerRoutes, initStore } from '../app'
 import App from '../components/App'
 import createServer from './createServer'
+import { callServerCallback, callServerCallbackUses } from './callServerCallback'
 
 const clientDir = path.resolve(__dirname, '../client')
 const app = express()
@@ -19,36 +20,50 @@ app.use(express.static(clientDir, { index: '_' }))
 app.get('*', async (req, res) => {
 
   const parsedUrl = req._parsedOriginalUrl
-  const location = req.url
 
-  const serverRoutes = await getServerRoutes()
+  const routes = await getServerRoutes()
 
   // get matched route
-  const matchRoute = serverRoutes.find(route => matchPath(parsedUrl.pathname, route))
+  const route = routes.find(route => matchPath(parsedUrl.pathname, route))
 
-  if (!matchRoute) {
+  if (!route) {
     return res.status(404).send("Not found.")
   }
 
   const store = initStore()
 
-  // fetch data of the matched component
-  let context = null
-  if (matchRoute.component && typeof matchRoute.component.serverCallback === 'function') {
-    try {
-      context = await matchRoute.component.serverCallback({ store, parsedUrl, matchRoute })
-    } catch (error) {
-      context = { error }
+  if (route.component) {
+    if (typeof route.component.serverCallback === 'function') {
+      await callServerCallback(req, routes, route.component.serverCallback, store)
+    } else if (typeof route.component.serverCallbackUses === 'function') {
+      await callServerCallbackUses(req, routes, route.component.serverCallbackUses, store)
     }
   }
 
+  send(req, res, routes, store)
+})
+
+function send(req, res, routes, store) {
+
+  let context = null
   const appHTML = renderToString(
-    <StaticRouter location={location} context={context}>
-      <App store={store} routes={serverRoutes} />
+    <StaticRouter location={req.url} context={context}>
+      <App store={store} routes={routes} />
     </StaticRouter>
   )
 
-  const indexHTML = fs.readFileSync(path.resolve(clientDir, 'index.html'), {
+  // Grab the initial state from our Redux store
+  const state = store.getState()
+
+  // Send the rendered page back to the client
+  res
+    .contentType('text/html')
+    .status(200)
+    .send(renderFullPage(appHTML, state))
+}
+
+function renderFullPage(appHTML, state) {
+  return fs.readFileSync(path.resolve(clientDir, 'index.html'), {
     encoding: 'utf8',
   })
     .replace(
@@ -57,12 +72,8 @@ app.get('*', async (req, res) => {
     )
     .replace(
       '<script>window.__STATE__</script>',
-      `<script>window.__STATE__=${JSON.stringify(store.getState())}</script>`
-    );
-
-  res.contentType('text/html')
-  res.status(200)
-  res.send(indexHTML)
-})
+      `<script>window.__STATE__=${JSON.stringify(state).replace(/</g, '\\u003c')}</script>`
+    )
+}
 
 createServer(app)

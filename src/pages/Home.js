@@ -1,9 +1,13 @@
 import React from 'react'
+import { useParams } from 'react-router-dom'
 import { useSelector, useDispatch } from 'react-redux'
 import Nav from '../components/Nav'
-import { pageServerCallback } from '../app'
+import { pageServerCallback, pageServerCallbackUses } from '../app'
 import apiTest from '../api/test'
 import { pending, success, error } from '../store/slices/test'
+
+
+
 
 const Home = ({ initialText, staticContext, ...rest }) => {
 
@@ -36,14 +40,17 @@ const Home = ({ initialText, staticContext, ...rest }) => {
   )
 }
 
-const serverAction = ({ store }) => {
+const serverAction = ({ store, url, route }) => {
+
+  const params = useParams()
+
   return apiTest('aaaa/bbbbb')
     .then(data => {
-      store.dispatch(success(data))
+      store.dispatch(success({ ...data, params }))
     })
 }
 
-export default pageServerCallback(serverAction,
+export default pageServerCallbackUses(serverAction,
   Home
 )
 
