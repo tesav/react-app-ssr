@@ -1,6 +1,6 @@
 import https from 'https'
 import http from 'http'
-import config, { getSecureOptions } from './config'
+import config, { getSecureOptions } from '../config/server'
 
 export default app => {
     let server = null

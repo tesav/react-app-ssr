@@ -5,8 +5,7 @@ import React from 'react'
 import { renderToString } from 'react-dom/server'
 import { StaticRouter, matchPath } from 'react-router-dom'
 
-import { getServerRoutes } from '../app'
-import { initStore } from '../store'
+import { getServerRoutes, initStore } from '../app'
 import App from '../components/App'
 import createServer from './createServer'
 

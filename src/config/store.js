@@ -5,14 +5,13 @@ import createSagaMiddleware from 'redux-saga'
 
 import { connectRouter } from 'connected-react-router'
 // import history from 'utils/history'
-import slices from './slices'
 
-let store = null
+import { reducers } from '../app'
 
 function createReducer() {
   return combineReducers({
     // router: connectRouter(history),
-    ...slices,
+    ...reducers,
   })
 }
 
@@ -32,7 +31,7 @@ export function initStore(initialState = {}) {
     }),
   ]
 
-  store = configureStore({
+  const store = configureStore({
     reducer: createReducer(),
     middleware: [...getDefaultMiddleware(), ...middlewares],
     preloadedState: initialState,
@@ -50,5 +49,3 @@ export function initStore(initialState = {}) {
 
   return store
 }
-
-// export default () => store

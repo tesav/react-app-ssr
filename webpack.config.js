@@ -138,8 +138,8 @@ const serverConfig = {
       global: false,
       process: false,
       Buffer: false,
-      __filename: false,
-      __dirname: false,
+      //__filename: false,
+      //__dirname: false,
     },
   },
 };

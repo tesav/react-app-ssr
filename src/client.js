@@ -1,9 +1,7 @@
 import React, { Suspense } from 'react'
 import ReactDOM from 'react-dom'
 import { BrowserRouter } from 'react-router-dom'
-
-import { initStore } from './store'
-import { routes } from './app'
+import { routes, initStore } from './app'
 import App from './components/App'
 
 const store = initStore(window.__STATE__)

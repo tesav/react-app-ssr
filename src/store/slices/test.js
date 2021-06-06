@@ -1,8 +1,8 @@
 import { createSlice } from '@reduxjs/toolkit'
 
-import o from './o'
+import pendingSuccessError from './pendingSuccessError'
 
-export const test = createSlice({ ...o, name: 't' })
+export const test = createSlice({ ...pendingSuccessError, name: 't' })
 
 // Action creators are generated for each case reducer function
 export const { pending, success, error } = test.actions
