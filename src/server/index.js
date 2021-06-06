@@ -74,8 +74,8 @@ function renderFullPage(appHTML, state) {
       `<div id="root">${appHTML}</div>`
     )
     .replace(
-      /(\s*<\/body>)/i,
-      `<script>window.__STATE__=${JSON.stringify(state).replace(/</g, '\\u003c')}</script>\n$1`
+      /(\s*)(<\/body>)/i,
+      `$1  <script>window.__STATE__=${JSON.stringify(state).replace(/</g, '\\u003c')}</script>$1$2`
     )
 }
 
