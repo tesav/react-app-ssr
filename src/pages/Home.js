@@ -1,13 +1,10 @@
 import React from 'react'
-import { useParams } from 'react-router-dom'
+import { useLocation } from 'react-router-dom'
 import { useSelector, useDispatch } from 'react-redux'
 import Nav from '../components/Nav'
 import { pageServerCallback, pageServerCallbackUses } from '../app'
 import apiTest from '../api/test'
 import { pending, success, error } from '../store/slices/test'
-
-
-
 
 const Home = ({ ...rest }) => {
 
@@ -38,13 +35,17 @@ const Home = ({ ...rest }) => {
   )
 }
 
-const serverAction = ({ store, url, route }) => {
+function useQuery() {
+  return new URLSearchParams(useLocation().search);
+}
 
-  const params = useParams()
+const serverAction = ({ store, match }) => {
+
+  const location = useLocation()
 
   return apiTest('api/test')
     .then(data => {
-      store.dispatch(success({ ...data, params }))
+      store.dispatch(success({ ...data, match }))
     })
 }
 

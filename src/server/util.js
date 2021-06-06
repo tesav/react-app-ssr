@@ -2,7 +2,15 @@ import https from 'https'
 import http from 'http'
 import config, { getSecureOptions } from '../config/server'
 
-export default app => {
+export function getUrl(req) {
+    return req.url
+}
+
+export function getParsedUrl(req) {
+    return req._parsedOriginalUrl
+}
+
+export function createServer(app) {
     let server = null
 
     if (config.secure) {

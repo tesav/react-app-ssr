@@ -6,7 +6,7 @@ const App = ({ store, routes, children }) => (
   <React.StrictMode>
     <Provider store={store}>
       <Switch>{routes.map(route =>
-        <Route key={route.path} strict exact {...route} >{children}</Route>
+        <Route key={route.path} strict={false} exact {...route}>{children}</Route>
       )}</Switch>
     </Provider>
   </React.StrictMode>
