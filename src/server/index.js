@@ -37,11 +37,11 @@ app.get('*', async (req, res) => {
 
   const store = initStore()
 
-  // if (typeof route.component.serverCallback === 'function') {
-  //   await callServerCallback(req, route, route.component.serverCallback, store)
-  // } else if (typeof route.component.serverCallbackUses === 'function') {
-  //   await callServerCallbackUses(req, route, route.component.serverCallbackUses, store)
-  // }
+  if (typeof route.component.serverCallback === 'function') {
+    await callServerCallback(req, route, route.component.serverCallback, store)
+  } else if (typeof route.component.serverCallbackUses === 'function') {
+    await callServerCallbackUses(req, route, route.component.serverCallbackUses, store)
+  }
 
   send(req, res, routes, store)
 })
@@ -74,8 +74,8 @@ function renderFullPage(appHTML, state) {
       `<div id="root">${appHTML}</div>`
     )
     .replace(
-      '<script>window.__STATE__</script>',
-      `<script>window.__STATE__=${JSON.stringify(state).replace(/</g, '\\u003c')}</script>`
+      /(\s<\/body>)/i,
+      `<script>window.__STATE__=${JSON.stringify(state).replace(/</g, '\\u003c')}</script>\n$1`
     )
 }
 

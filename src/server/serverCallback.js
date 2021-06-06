@@ -9,7 +9,7 @@ import {
 
 function cbParams(req, route, store) {
     const parsedUrl = getParsedUrl(req)
-
+console.log(777)
     return {
         store,
         match: matchPath(parsedUrl.pathname, route),

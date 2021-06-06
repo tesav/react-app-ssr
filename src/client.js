@@ -4,7 +4,7 @@ import { BrowserRouter } from 'react-router-dom'
 import { routes, initStore } from './app'
 import App from './components/App'
 
-const store = initStore(window.__STATE__)
+const store = initStore(typeof window.__STATE__ === 'undefined' ? {} : window.__STATE__)
 delete window.__STATE__
 
 ReactDOM./*hydrate*/render(
