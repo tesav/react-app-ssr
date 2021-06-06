@@ -1,12 +1,9 @@
 import express from 'express'
 import fs from 'fs'
 import path from 'path'
-import React from 'react'
-import { renderToString } from 'react-dom/server'
-import { StaticRouter, matchPath } from 'react-router-dom'
+import { matchPath } from 'react-router-dom'
 import { getServerRoutes, initStore } from '../app'
-import App from '../components/App'
-import { callServerCallback, callServerCallbackUses } from './serverCallback'
+import { renderAppToStr, callServerCallback, callServerCallbackUses } from './serverCallback'
 import {
   getUrl,
   getParsedUrl,
@@ -31,29 +28,26 @@ app.get('*', async (req, res) => {
     return match && match.url === parsedUrl.pathname
   })
 
-  if (!route || !route.component) {
+  if (!route /* || !route.component */) {
     return res.status(404).send("Not found.")
   }
 
   const store = initStore()
 
-  if (typeof route.component.serverCallback === 'function') {
-    await callServerCallback(req, route, route.component.serverCallback, store)
-  } else if (typeof route.component.serverCallbackUses === 'function') {
-    await callServerCallbackUses(req, route, route.component.serverCallbackUses, store)
+  if (route.component) {
+    if (typeof route.component.serverCallback === 'function') {
+      await callServerCallback(req, route, route.component.serverCallback, store)
+    } else if (typeof route.component.serverCallbackUses === 'function') {
+      await callServerCallbackUses(req, route, route.component.serverCallbackUses, store)
+    }
   }
 
-  send(req, res, routes, store)
+  send(req, res, route, store)
 })
 
-function send(req, res, routes, store) {
+function send(req, res, route, store) {
 
-  let context = null
-  const appHTML = renderToString(
-    <StaticRouter location={getUrl(req)} context={context}>
-      <App store={store} routes={routes} />
-    </StaticRouter>
-  )
+  const appHTML = renderAppToStr(getUrl(req), route, store)
 
   // Grab the initial state from our Redux store
   const state = store.getState()
