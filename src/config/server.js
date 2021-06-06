@@ -3,7 +3,7 @@ import path from 'path'
 
 export default {
     host: 'localhost', // 'test.local'
-    port: 3001,
+    port: 3000,
     backlog: 511, // Optional. Specifies the max length of the queue of pending connections. Default 511
     secure: false,
 }
