@@ -37,11 +37,11 @@ app.get('*', async (req, res) => {
 
   const store = initStore()
 
-  if (typeof route.component.serverCallback === 'function') {
-    await callServerCallback(req, route, route.component.serverCallback, store)
-  } else if (typeof route.component.serverCallbackUses === 'function') {
-    await callServerCallbackUses(req, route, route.component.serverCallbackUses, store)
-  }
+  // if (typeof route.component.serverCallback === 'function') {
+  //   await callServerCallback(req, route, route.component.serverCallback, store)
+  // } else if (typeof route.component.serverCallbackUses === 'function') {
+  //   await callServerCallbackUses(req, route, route.component.serverCallbackUses, store)
+  // }
 
   send(req, res, routes, store)
 })
