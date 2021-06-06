@@ -1,9 +1,9 @@
 import test from './slices/test'
-//import test1 from './test1'
-//import test2 from './test2'
+import test1 from './slices/test1'
+import test2 from './slices/test2'
 
 export default {
-    aaa: test,
-    //bbb: test1,
-    //ccc: test2,
+    test,
+    test1,
+    test2,
 }

@@ -9,31 +9,29 @@ import { pending, success, error } from '../store/slices/test'
 
 
 
-const Home = ({ initialText, staticContext, ...rest }) => {
+const Home = ({ ...rest }) => {
 
-  const data = useSelector((state) => state.aaa.data)
+  const stateData = useSelector((state) => state.test.data)
   const dispatch = useDispatch()
 
   return (
     <div>
       <Nav />
-      <p>{JSON.stringify(rest, null, true)}</p>
-      <p>staticContext: {JSON.stringify(staticContext)}</p>
-      <p>{initialText}</p>
-      {/* <button onClick={changeText}>change text!</button> */}
+      <p>props: {JSON.stringify(rest, null, true)}</p>
+      <br />
       <div>
+        <p>stateData: {JSON.stringify(stateData, null, true)}</p>
         <button
           aria-label="Increment value"
           onClick={() => dispatch(success(123))}
         >
-          Increment
+          dispatch test data 1
         </button>
-        <span>{JSON.stringify(data, null, true)}</span>
         <button
           aria-label="Decrement value"
           onClick={() => dispatch(success(321))}
         >
-          Decrement
+          dispatch test data 2
         </button>
       </div>
     </div>
@@ -44,7 +42,7 @@ const serverAction = ({ store, url, route }) => {
 
   const params = useParams()
 
-  return apiTest('aaaa/bbbbb')
+  return apiTest('api/test')
     .then(data => {
       store.dispatch(success({ ...data, params }))
     })
