@@ -36,11 +36,12 @@ export function callServerCallbackUses(req, route, serverCallback, store) {
   return promise
 }
 
-export function renderAppToStr(location, route, store, component = null) {
+export function renderAppToStr(location, route, store, cmp = null) {
+  const { component, ...rest } = route
   return renderToString(
     <StaticRouter location={location} context={{}}>
-      <App store={store} routes={[route]}>{
-        component || (route.ssr !== undefined && !route.ssr ? route.component : null)
+      <App store={store} routes={[rest]}>{
+        route.ssr === undefined || route.ssr ? cmp || component : null
       }</App>
     </StaticRouter>
   )

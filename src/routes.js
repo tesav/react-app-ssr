@@ -12,11 +12,13 @@ export default [
         name: 'home',
         path: '/',
         component: Home,
+        // ssr: false,
     },
     {
         name: 'about',
         path: '/about/:filter?',
         component: About,
+        // ssr: false,
     },
     // {
     //     name: 'test',
@@ -28,5 +30,6 @@ export default [
         name: '404',
         path: '/*',
         component: E404,
+        // ssr: false,
     },
 ]
