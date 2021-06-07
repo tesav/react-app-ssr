@@ -2,10 +2,7 @@ import React from 'react'
 import { StaticRouter, matchPath } from 'react-router-dom'
 import { renderToString } from 'react-dom/server'
 import App from '../components/App'
-import {
-  getUrl,
-  getParsedUrl,
-} from './util'
+import { getParsedUrl } from './util'
 
 function cbParams(req, route, store) {
   const parsedUrl = getParsedUrl(req)
@@ -31,18 +28,18 @@ export function callServerCallbackUses(req, route, serverCallback, store) {
     return null
   }
 
-  renderAppToStr(getUrl(req), route, store, <ServerCallback />)
+  renderAppToStr(req, route, store, <ServerCallback />)
 
   return promise
 }
 
-export function renderAppToStr(location, route, store, cmp = null) {
+export function renderAppToStr(req, route, store, cmp = null) {
   const { component, ...rest } = route
+  const location = req.url
+
   return renderToString(
     <StaticRouter location={location} context={{}}>
-      <App store={store} routes={[rest]}>{
-        route.ssr === undefined || route.ssr ? cmp || component : null
-      }</App>
+      <App store={store} routes={[rest]}>{cmp || component}</App>
     </StaticRouter>
   )
 }
