@@ -33,13 +33,24 @@ export function callServerCallbackUses(req, route, serverCallback, store) {
   return promise
 }
 
+// export function renderAppToStr(req, route, store, cmp = null) {
+//   const { component, ...rest } = route
+//   const location = req.url
+
+//   return renderToString(
+//     <StaticRouter location={location} context={{}}>
+//       <App store={store} routes={[rest]}>{cmp || component}</App>
+//     </StaticRouter>
+//   )
+// }
+
 export function renderAppToStr(req, route, store, cmp = null) {
-  const { component, ...rest } = route
+  // const { component, ...rest } = route
   const location = req.url
 
   return renderToString(
     <StaticRouter location={location} context={{}}>
-      <App store={store} routes={[rest]}>{cmp || component}</App>
+      <App store={store} routes={[route]}>{cmp}</App>
     </StaticRouter>
   )
 }
