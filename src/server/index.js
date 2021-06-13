@@ -3,9 +3,13 @@ import fs from 'fs'
 import path from 'path'
 import { matchPath } from 'react-router-dom'
 import { getServerRoutes, initStore } from '../app'
-import { renderAppToStr, callServerCallback, callServerCallbackUses } from './serverCallback'
-import { getParsedUrl } from './util'
+import {
+  renderAppToStr,
+  callServerCallback,
+} from './serverCallback'
+
 import createServer from './createServer'
+import { getParsedUrl } from './util';
 
 const clientDir = path.resolve(__dirname, '../client')
 const app = express()
@@ -49,14 +53,13 @@ async function renderPage(req, route) {
   }
 
   const store = initStore()
-  const appHTML = renderAppToStr(req, route, store)
+  let appHTML = renderAppToStr(req, route, store)
 
-  if (route.component) {
-    if (typeof route.component.serverCallback === 'function') {
-      await callServerCallback(req, route, route.component.serverCallback, store)
-    } else if (typeof route.component.serverCallbackUses === 'function') {
-      await callServerCallbackUses(req, route, route.component.serverCallbackUses, store)
-    }
+  const promise = callServerCallback(req, route, store)
+  if (promise) {
+    await promise
+    // Re render app with store data
+    appHTML = renderAppToStr(req, route, store)
   }
 
   // Grab the initial state from our Redux store

@@ -15,11 +15,11 @@ function cbParams(req, route, store) {
   }
 }
 
-export function callServerCallback(req, route, serverCallback, store) {
+function callCallback(req, route, serverCallback, store) {
   return serverCallback(cbParams(req, route, store))
 }
 
-export function callServerCallbackUses(req, route, serverCallback, store) {
+function callCallbackUses(req, route, serverCallback, store) {
 
   let promise = null
 
@@ -53,4 +53,14 @@ export function renderAppToStr(req, route, store, cmp = null) {
       <App store={store} routes={[route]}>{cmp}</App>
     </StaticRouter>
   )
+}
+
+export function callServerCallback(req, route, store) {
+  if (route.component) {
+    if (typeof route.component.serverCallback === 'function') {
+      return callCallback(req, route, route.component.serverCallback, store)
+    } else if (typeof route.component.serverCallbackUses === 'function') {
+      return callCallbackUses(req, route, route.component.serverCallbackUses, store)
+    }
+  }
 }
