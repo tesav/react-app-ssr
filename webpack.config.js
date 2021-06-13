@@ -81,8 +81,9 @@ const clientConfig = {
       ]
     }),
     new HtmlWebpackPlugin({
-      inject: true,
       template: "public/index.html",
+      inject: true,
+      minify: false,
     }),
   ],
 
