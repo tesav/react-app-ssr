@@ -53,13 +53,18 @@ async function renderPage(req, route) {
   }
 
   const store = initStore()
+  let initialProps = {}
   let appHTML = renderAppToStr(req, route, store)
 
   const promise = callServerCallback(req, route, store)
   if (promise) {
-    await promise
-    // Re render app with store data
-    appHTML = renderAppToStr(req, route, store)
+    try {
+      initialProps = await promise || {}
+      // Re render app with store data
+      appHTML = renderAppToStr(req, route, store, initialProps)
+    } catch (error) {
+      initialProps.error = error.toString()
+    }
   }
 
   // Grab the initial state from our Redux store
@@ -71,8 +76,11 @@ async function renderPage(req, route) {
       `<div id="root">${appHTML}</div>`
     )
     .replace(
-      /(\s*)(<\/body>)/i,
-      `$1  <script>window.__STATE__=${JSON.stringify(state).replace(/</g, '\\u003c')}</script>$1$2`
+      /(<\/body>)/i,
+      `${[
+        `<script type="application/json" id="__PAGE_DATA__">${JSON.stringify(initialProps)}</script>`,
+        `<script type="application/json" id="__STATE__">${JSON.stringify(state)}</script>`,
+      ].join('\n')}$1`
     )
 }
 

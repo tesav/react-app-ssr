@@ -7,7 +7,6 @@ const About = props => (
 
     <h1>About</h1>
     <p>Some information about the page</p>
-    <p>{props.location.pathname}</p>
   </div>
 );
 

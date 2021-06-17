@@ -5,7 +5,10 @@ const CopyWebpackPlugin = require('copy-webpack-plugin')
 const ProgressBarPlugin = require('progress-bar-webpack-plugin')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const HtmlWebpackPlugin = require("html-webpack-plugin")
-//const NodePolyfillPlugin = require("node-polyfill-webpack-plugin")
+
+const dotenv = require('dotenv')
+
+const env = JSON.stringify(dotenv.config().parsed)
 
 const common = {
   module: {
@@ -60,6 +63,9 @@ const clientConfig = {
   },
 
   plugins: [
+    new webpack.DefinePlugin({
+      'window.env': env // it will automatically pick up key values from .env file
+    }),
     new ProgressBarPlugin(),
     //new NodePolyfillPlugin(),
     // new webpack.ProvidePlugin({
@@ -120,6 +126,9 @@ const serverConfig = {
   },
 
   plugins: [
+    new webpack.DefinePlugin({
+      'process.env': env // it will automatically pick up key values from .env file
+    }),
     //new ProgressBarPlugin(),
     // new webpack.ProvidePlugin({
     //   w: path.resolve('src/window.mock'),

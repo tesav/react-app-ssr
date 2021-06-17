@@ -1,19 +1,22 @@
 import React from 'react'
-import { pathToRegexp, match, parse, compile } from 'path-to-regexp'
+import { compile } from 'path-to-regexp'
 import { initStore } from './config/store'
 import reducers from './store/reducers'
 import routes from './routes'
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj } }
 
+const ENV = (isSSR() ? process.env : window.env) || {}
+
 export {
+  ENV,
   routes,
   initStore,
   reducers,
 }
 
 export async function getServerRoutes() {
-  return /*await*/ Promise.all(routes.map(async ({ ...route }) => {
+  return Promise.all(routes.map(async ({ ...route }) => {
     route.component = await _interopRequireDefault(await route.component).default
     return route
   }))
@@ -44,7 +47,7 @@ export function routeName(name, data = {}, options = {}) {
   let path = '#'
 
   if (!route) {
-    console.error(`ROUTER ERROR: Route name: "${name}" not found!`)
+    throw `ROUTER ERROR: Route name: "${name}" not found!`
   } else {
     path = compile(route.path, !opt.encode ? {} : { encode: encodeURIComponent })(obj.params)
 
@@ -53,7 +56,7 @@ export function routeName(name, data = {}, options = {}) {
         path += `?${obj.query.replace(/^\?/, '')}`
       } else if (typeof obj.query === 'object') {
         const temp = []
-        for (let [key, value] of Object.entries(obj.query)) {
+        for (const [key, value] of Object.entries(obj.query)) {
           temp.push(`${key}=${value}`)
         }
         path += `?${temp.join('&')}`
@@ -66,7 +69,7 @@ export function routeName(name, data = {}, options = {}) {
 
     if (obj.state && Object.keys(obj.state).length) {
       if (opt.full) {
-        console.warn(`ROUTER WARNING: Route name "${name}" "state" no effect!`)
+        throw (`ROUTER WARNING: Route name "${name}" "state" no effect!`)
       } else {
         return { pathname: path, state: obj.state }
       }
@@ -77,7 +80,7 @@ export function routeName(name, data = {}, options = {}) {
 }
 
 export function getHost() {
-  console.warn(`Not Implemented!`)
+  console.warn('Not Implemented!')
   return ''
 }
 
@@ -100,4 +103,23 @@ export function pageServerCallback(cb, Page) {
 export function pageServerCallbackUses(cb, Page) {
   Page.serverCallbackUses = cb
   return Page
+}
+
+export function getEnv(value, defaultValue = null) {
+  return ENV[value] !== undefined ? ENV[value] : defaultValue
+}
+
+export function sleep(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms))
+}
+
+export function getScriptJson(id, defaultData = {}) {
+  try {
+    const el = document.getElementById(id)
+    const data = JSON.parse(el.innerText) || defaultData
+    el.remove()
+    return data
+  } catch (error) { }
+
+  return defaultData
 }

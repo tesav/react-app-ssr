@@ -7,7 +7,6 @@ const E404 = props => (
 
     <h1>404</h1>
     <p>page not found.</p>
-    <p>{props.location.pathname}</p>
   </div>
 );
 

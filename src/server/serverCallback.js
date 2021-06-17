@@ -28,29 +28,17 @@ function callCallbackUses(req, route, serverCallback, store) {
     return null
   }
 
-  renderAppToStr(req, route, store, <ServerCallback />)
+  renderAppToStr(req, { ...route, component: ServerCallback }, store)
 
   return promise
 }
 
-// export function renderAppToStr(req, route, store, cmp = null) {
-//   const { component, ...rest } = route
-//   const location = req.url
-
-//   return renderToString(
-//     <StaticRouter location={location} context={{}}>
-//       <App store={store} routes={[rest]}>{cmp || component}</App>
-//     </StaticRouter>
-//   )
-// }
-
-export function renderAppToStr(req, route, store, cmp = null) {
-  // const { component, ...rest } = route
+export function renderAppToStr(req, route, store, initialProps = {}) {
   const location = req.url
 
   return renderToString(
-    <StaticRouter location={location} context={{}}>
-      <App store={store} routes={[route]}>{cmp}</App>
+    <StaticRouter location={location} /* context={{ initialProps }} */>
+      <App store={store} routes={[route]} initialProps={initialProps} />
     </StaticRouter>
   )
 }
