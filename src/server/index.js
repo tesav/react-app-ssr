@@ -67,21 +67,36 @@ async function renderPage(req, route) {
     }
   }
 
-  // Grab the initial state from our Redux store
-  const state = store.getState()
-
-  return html
+  let preparedHtml = html
     .replace(
       '<div id="root"></div>',
       `<div id="root">${appHTML}</div>`
     )
-    .replace(
-      /(<\/body>)/i,
-      `${[
-        `<script type="application/json" id="__PAGE_DATA__">${JSON.stringify(initialProps)}</script>`,
-        `<script type="application/json" id="__STATE__">${JSON.stringify(state)}</script>`,
-      ].join('\n')}$1`
+
+  // Grab the initial state from our Redux store
+  const state = store.getState()
+  const serverDataScripts = []
+
+  if (Object.keys(initialProps).length) {
+    serverDataScripts.push(
+      `<script type="application/json" id="__PAGE_DATA__">${JSON.stringify(initialProps)}</script>`
     )
+  }
+
+  if (Object.keys(state).length) {
+    serverDataScripts.push(
+      `<script type="application/json" id="__STATE__">${JSON.stringify(state)}</script>`
+    )
+  }
+
+  if (serverDataScripts.length) {
+    preparedHtml = preparedHtml.replace(
+      /(<\/body>)/i,
+      `${serverDataScripts.join('\n')}$1`
+    )
+  }
+
+  return preparedHtml
 }
 
 createServer(app)
